@@ -10,18 +10,44 @@ namespace GestionInventaireStock_CSharp.API
 {
     public class Api
     {
-        public static async Task GET(HttpClient client)
+        public static async Task<string> GET(HttpClient client)
         {
             var json = await client.GetStringAsync(
-                 "http://localhost:3000/ceolcyne/");
+                 Environment.GetEnvironmentVariable("API_URL")); //Variable d'environnement à définir dans Projet > Propriétés > Déboguer > Général
 
-            Console.Write(json);
+            return json;
         }
 
-        public static async Task POST(HttpClient client, string json)
+        public static async Task<string> GET_ONE(HttpClient client, string id)
         {
-            await client.PostAsJsonAsync(
-            "http://localhost:3000/ceolcyne/", json);
+            var json = await client.GetStringAsync(
+                 Environment.GetEnvironmentVariable("API_URL") + id);
+
+            return json;
+        }
+
+        public static async Task<HttpResponseMessage> POST(HttpClient client, string json)
+        {
+            var err = await client.PostAsJsonAsync(
+            Environment.GetEnvironmentVariable("API_URL"), json);
+
+            return err;
+        }
+
+        public static async Task<HttpResponseMessage> PATCH(HttpClient client, string id, string json)
+        {
+            var err = await client.PatchAsJsonAsync(
+            Environment.GetEnvironmentVariable("API_URL") + id, json);
+
+            return err;
+        }
+
+        public static async Task<HttpResponseMessage> DELETE(HttpClient client, string id)
+        {
+            var err = await client.DeleteAsync(
+            Environment.GetEnvironmentVariable("API_URL") + id);
+
+            return err;
         }
     }
 }
