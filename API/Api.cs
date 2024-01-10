@@ -33,7 +33,7 @@ namespace GestionInventaireStock_CSharp.API
         {
             var content = new StringContent(json, Encoding.UTF8, "application/json");
             var err = await client.PostAsync(
-            Environment.GetEnvironmentVariable("DATABASE_URL") + "e-commerce/" + endpoint + ".php", content);
+            Environment.GetEnvironmentVariable("DATABASE_URL") + "e-commerce/" + endpoint, content);
 
             return err;
         }
