@@ -4,6 +4,7 @@ using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Net.Http.Json;
+using System.Text;
 using System.Threading.Tasks;
 using GestionInventaireStock_CSharp.Models;
 
@@ -12,6 +13,7 @@ namespace GestionInventaireStock_CSharp.API
     public class Api
     {
         public static HttpClient client = new HttpClient();
+        
 
         public static async Task<string> GET(string endpoint)
         {
@@ -29,9 +31,9 @@ namespace GestionInventaireStock_CSharp.API
 
         public static async Task<HttpResponseMessage> POST(string endpoint, string json)
         {
-
-            var err = await client.PostAsJsonAsync(
-            Environment.GetEnvironmentVariable("DATABASE_URL") + "e-commerce/" + endpoint + ".php", json);
+            var content = new StringContent(json, Encoding.UTF8, "application/json");
+            var err = await client.PostAsync(
+            Environment.GetEnvironmentVariable("DATABASE_URL") + "e-commerce/" + endpoint + ".php", content);
 
             return err;
         }
