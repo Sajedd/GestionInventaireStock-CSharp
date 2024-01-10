@@ -1,6 +1,6 @@
 # GestionInventaireStock-CSharp
 
-Mes - Responsabilités
+Mes Responsabilités
 Salut tout le monde ! Voici mes responsabilités :
 
 1. Configuration du Serveur Web :
