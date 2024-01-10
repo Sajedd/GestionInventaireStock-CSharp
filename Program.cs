@@ -3,16 +3,20 @@ using System.Net;
 using System.Threading;
 using System.Text;
 using System.IO;
+using GestionInventaireStock_CSharp.API;
+using GestionInventaireStock_CSharp.Server;
 namespace GestionInventaireStock_CSharp
 {
     public class Program
     {
         
-        static void Main(string[] args)
+        static async Task Main(string[] args)
         {
-            HttpServer.Start("3000");
+            await HttpServer.StartAsync();
+
         }
     }
+
 }
 
 

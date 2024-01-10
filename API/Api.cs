@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Net.Http;
 using System.Net.Http.Json;
 using System.Threading.Tasks;
@@ -10,42 +11,43 @@ namespace GestionInventaireStock_CSharp.API
 {
     public class Api
     {
-        public static async Task<string> GET(HttpClient client)
+        public static HttpClient client = new HttpClient();
+
+        public static async Task<string> GET(string endpoint)
         {
             var json = await client.GetStringAsync(
-                 Environment.GetEnvironmentVariable("API_URL")); //Variable d'environnement à définir dans Projet > Propriétés > Déboguer > Général
-
+                 Environment.GetEnvironmentVariable("DATABASE_URL")+"e-commerce/" +endpoint+".php"); //Variable d'environnement ï¿½ dï¿½finir dans Projet > Propriï¿½tï¿½s > Dï¿½boguer > Gï¿½nï¿½ral
             return json;
         }
 
-        public static async Task<string> GET_ONE(HttpClient client, string id)
+        public static async Task<string> GET_ONE(string endpoint, string id)
         {
             var json = await client.GetStringAsync(
-                 Environment.GetEnvironmentVariable("API_URL") + id);
-
+                 Environment.GetEnvironmentVariable("DATABASE_URL") + "e-commerce/" + endpoint + ".php?q={\"id\":\""+id+"\"}"); //Variable d'environnement ï¿½ dï¿½finir dans Projet > Propriï¿½tï¿½s > Dï¿½boguer > Gï¿½nï¿½ral
             return json;
         }
 
-        public static async Task<HttpResponseMessage> POST(HttpClient client, string json)
+        public static async Task<HttpResponseMessage> POST(string endpoint, string json)
         {
+
             var err = await client.PostAsJsonAsync(
-            Environment.GetEnvironmentVariable("API_URL"), json);
+            Environment.GetEnvironmentVariable("DATABASE_URL") + "e-commerce/" + endpoint + ".php", json);
 
             return err;
         }
 
-        public static async Task<HttpResponseMessage> PATCH(HttpClient client, string id, string json)
+        public static async Task<HttpResponseMessage> PATCH(string endpoint, string id, string json)
         {
             var err = await client.PatchAsJsonAsync(
-            Environment.GetEnvironmentVariable("API_URL") + id, json);
+            Environment.GetEnvironmentVariable("DATABASE_URL") + "e-commerce/" + endpoint + ".php?q={\"id\":\""+id+"\"}", json);
 
             return err;
         }
 
-        public static async Task<HttpResponseMessage> DELETE(HttpClient client, string id)
+        public static async Task<HttpResponseMessage> DELETE(string endpoint, string id)
         {
             var err = await client.DeleteAsync(
-            Environment.GetEnvironmentVariable("API_URL") + id);
+            Environment.GetEnvironmentVariable("DATABASE_URL") + "e-commerce/" + endpoint + ".php?q={\"id\":\"" + id + "\"}");
 
             return err;
         }
