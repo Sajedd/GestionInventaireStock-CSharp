@@ -38,10 +38,11 @@ namespace GestionInventaireStock_CSharp.API
             return err;
         }
 
-        public static async Task<HttpResponseMessage> PATCH(string endpoint, string id, string json)
+        public static async Task<HttpResponseMessage> PUT(string endpoint, string json)
         {
-            var err = await client.PatchAsJsonAsync(
-            Environment.GetEnvironmentVariable("DATABASE_URL") + "e-commerce/" + endpoint + ".php?q={\"id\":\""+id+"\"}", json);
+            var content = new StringContent(json, Encoding.UTF8, "application/json");
+            var err = await client.PutAsync(
+            Environment.GetEnvironmentVariable("DATABASE_URL") + "e-commerce/" + endpoint, content);
 
             return err;
         }
@@ -49,7 +50,7 @@ namespace GestionInventaireStock_CSharp.API
         public static async Task<HttpResponseMessage> DELETE(string endpoint, string id)
         {
             var err = await client.DeleteAsync(
-            Environment.GetEnvironmentVariable("DATABASE_URL") + "e-commerce/" + endpoint + ".php?q={\"id\":\"" + id + "\"}");
+            Environment.GetEnvironmentVariable("DATABASE_URL") + "e-commerce/" + endpoint + "/" + id);
 
             return err;
         }

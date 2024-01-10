@@ -5,6 +5,8 @@ using System.Net;
 using System.Threading;
 using GestionInventaireStock_CSharp.API;
 using System.Net.Cache;
+using static System.Net.Mime.MediaTypeNames;
+using System.Text.Json.Nodes;
 
 namespace GestionInventaireStock_CSharp.Server
 {
@@ -41,7 +43,23 @@ namespace GestionInventaireStock_CSharp.Server
                     context.Response.OutputStream.Write(bytesHtml, 0, bytesHtml.Length); // "Dépot" du fichier HTML sur le server
                     context.Response.Close(); // Fin de transmission
                 }
-                
+                else if (request.HttpMethod == "POST") 
+                {
+
+                    string body = new StreamReader(request.InputStream, request.ContentEncoding).ReadToEnd();
+
+                    Console.WriteLine(body);
+                    await Api.POST(request.Url.LocalPath,body);
+                    context.Response.Close(); // Fin de transmission
+                }
+                else if (request.HttpMethod == "PUT")
+                {
+                    string body = new StreamReader(request.InputStream, request.ContentEncoding).ReadToEnd();
+
+                    Console.WriteLine(body);
+                    await Api.PUT(request.Url.LocalPath, body);
+                    context.Response.Close(); // Fin de transmission
+                }
                 Console.WriteLine("REQUEST : " + context.Request.HttpMethod);
                 Console.WriteLine("RESPONSE : " + context.Response);
 
