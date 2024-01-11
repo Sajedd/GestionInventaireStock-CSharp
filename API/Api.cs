@@ -40,10 +40,10 @@ namespace GestionInventaireStock_CSharp.API
             return err;
         }
 
-        public static async Task<HttpResponseMessage> DELETE(string endpoint, string id)
+        public static async Task<HttpResponseMessage> DELETE(string endpoint)
         {
             var err = await client.DeleteAsync(
-            Environment.GetEnvironmentVariable("DATABASE_URL") + "e-commerce/" + endpoint + "/" + id);
+            Environment.GetEnvironmentVariable("DATABASE_URL") + "e-commerce/" + endpoint);
 
             return err;
         }
