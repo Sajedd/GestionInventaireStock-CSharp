@@ -22,13 +22,6 @@ namespace GestionInventaireStock_CSharp.API
             return json;
         }
 
-        public static async Task<string> GET_ONE(string endpoint, string id)
-        {
-            var json = await client.GetStringAsync(
-                 Environment.GetEnvironmentVariable("DATABASE_URL") + "e-commerce/" + endpoint + "/"+id); //Variable d'environnement � d�finir dans Projet > Propri�t�s > D�boguer > G�n�ral
-            return json;
-        }
-
         public static async Task<HttpResponseMessage> POST(string endpoint, string json)
         {
             var content = new StringContent(json, Encoding.UTF8, "application/json");
