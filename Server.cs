@@ -1,39 +1,26 @@
-using System;
-using System.IO;
 using System.Text;
 using System.Net;
-using System.Threading;
 using GestionInventaireStock_CSharp.API;
-using System.Net.Cache;
-using static System.Net.Mime.MediaTypeNames;
-using System.Text.Json.Nodes;
 
 namespace GestionInventaireStock_CSharp.Server
 {
     public class HttpServer
     {
         static HttpListener httpListener = new HttpListener();
-        private static HttpClient client = new HttpClient();
 
-        public static async Task StartAsync()
+        public static async Task Start()
         {
-            // fichier html
-
-            string html = File.ReadAllText("C:\\Users\\dell\\B2\\GestionInventaireStock-CSharp\\index.html");
-
-
-
             // Lancement du serveur
-
+            string API_URL = "http://localhost:3000/";
             Console.WriteLine("Starting server...");
-            httpListener.Prefixes.Add("http://localhost:3000/"); // Ajout de l'URI du serveur local
+            httpListener.Prefixes.Add(API_URL); // Ajout de l'URI du serveur local
             httpListener.Start();
-            Console.WriteLine("Running at http://localhost:3000/");
+            Console.WriteLine("Running at "+API_URL);
 
-            // Gestion des requêtes
+            // Gestion des requêtes http
             while (true)
             {
-                HttpListenerContext context = httpListener.GetContext(); // get a context
+                HttpListenerContext context = httpListener.GetContext(); // Obtention des informations sur la page (dites "context")
                 HttpListenerRequest request = context.Request;
                 if (request.HttpMethod == "GET")
                 {
@@ -41,7 +28,6 @@ namespace GestionInventaireStock_CSharp.Server
 
                     byte[] bytesHtml = Encoding.UTF8.GetBytes(await Api.GET(request.Url.LocalPath)); // Conversion en byte
                     context.Response.OutputStream.Write(bytesHtml, 0, bytesHtml.Length); // "Dépot" du fichier HTML sur le server
-                    context.Response.Close(); // Fin de transmission
                 }
                 else if (request.HttpMethod == "POST") 
                 {
@@ -49,8 +35,8 @@ namespace GestionInventaireStock_CSharp.Server
                     string body = new StreamReader(request.InputStream, request.ContentEncoding).ReadToEnd();
 
                     Console.WriteLine(body);
-                    await Api.POST(request.Url.LocalPath,body);
-                    context.Response.Close(); // Fin de transmission
+                    HttpResponseMessage rep = await Api.POST(request.Url.LocalPath, body);
+                    Console.WriteLine(rep.StatusCode.ToString());
                 }
                 else if (request.HttpMethod == "PUT")
                 {
@@ -58,10 +44,18 @@ namespace GestionInventaireStock_CSharp.Server
 
                     Console.WriteLine(body);
                     await Api.PUT(request.Url.LocalPath, body);
-                    context.Response.Close(); // Fin de transmission
                 }
+                else if(request.HttpMethod == "DELETE")
+                {
+                    await Api.DELETE(request.Url.LocalPath);
+
+                }
+
                 Console.WriteLine("REQUEST : " + context.Request.HttpMethod);
-                Console.WriteLine("RESPONSE : " + context.Response);
+                Console.WriteLine("RESPONSE : " + context.Response.StatusCode);
+                context.Response.Close(); // Fin de transmission
+                Console.WriteLine("DONE");
+
 
 
 

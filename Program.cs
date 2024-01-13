@@ -5,6 +5,9 @@ using System.Text;
 using System.IO;
 using GestionInventaireStock_CSharp.API;
 using GestionInventaireStock_CSharp.Server;
+using static System.Net.Mime.MediaTypeNames;
+using System.Drawing;
+using System.Reflection.Emit;
 namespace GestionInventaireStock_CSharp
 {
     public class Program
@@ -12,7 +15,8 @@ namespace GestionInventaireStock_CSharp
         
         static async Task Main(string[] args)
         {
-            await HttpServer.StartAsync();
+            // Hébergement de l'api
+            await HttpServer.Start();
 
         }
     }
