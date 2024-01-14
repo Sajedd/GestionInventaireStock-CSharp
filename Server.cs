@@ -2,6 +2,7 @@ using System.Text;
 using System.Net;
 using GestionInventaireStock_CSharp.API;
 using System.Text.RegularExpressions;
+using System;
 
 namespace GestionInventaireStock_CSharp.Server
 {
@@ -35,46 +36,58 @@ namespace GestionInventaireStock_CSharp.Server
                     }
                     catch (HttpRequestException e)
                     {
-                        Console.WriteLine("Message : \n" + e.Message + "\n Status code : \n" + e.StatusCode + "\n request error : \n" + e.HttpRequestError.ToString());
-
-                        byte[] errorBytes;
-
-                        if (e.HttpRequestError.ToString() == "ConnectionError")
-                        {
-                            response.StatusCode = 500;
-                            errorBytes = Encoding.UTF8.GetBytes("Erreur provenant du serveur"); // Conversion en byte du message d'erreur
-                            context.Response.OutputStream.Write(errorBytes, 0, errorBytes.Length); // Affichage sur le server
-                        }
-                        else
-                        {
-                            
-                            response.StatusCode = 400;
-                            errorBytes = Encoding.UTF8.GetBytes("Aucun endpoint correspondant"); // Conversion en byte du message d'erreur
-                            context.Response.OutputStream.Write(errorBytes, 0, errorBytes.Length); // Affichage sur le server
-                        }
+                        HandleException(e, response, context);
                     }
 
                 }
                 else if (request.HttpMethod == "POST") 
                 {
-
                     string body = new StreamReader(request.InputStream, request.ContentEncoding).ReadToEnd();
-
                     Console.WriteLine(body);
-                    HttpResponseMessage rep = await Api.POST(request.Url.LocalPath, body);
-                    Console.WriteLine(rep.StatusCode.ToString());
+
+                    try
+                    {
+                        HttpResponseMessage rep = await Api.POST(request.Url.LocalPath, body);
+                        byte[] bytesHtml = Encoding.UTF8.GetBytes("enregistrement réussi"); // Conversion en byte du body de l'endpoint
+                        context.Response.OutputStream.Write(bytesHtml, 0, bytesHtml.Length); // Affichage sur le server
+                        Console.WriteLine(rep.StatusCode.ToString());
+                    }
+                    catch(HttpRequestException e) {
+                        HandleException(e, response, context);
+                    }
+
                 }
                 else if (request.HttpMethod == "PUT")
                 {
                     string body = new StreamReader(request.InputStream, request.ContentEncoding).ReadToEnd();
-
                     Console.WriteLine(body);
-                    await Api.PUT(request.Url.LocalPath, body);
+
+                    try
+                    {
+                        HttpResponseMessage rep = await Api.PUT(request.Url.LocalPath, body);
+                        byte[] bytesHtml = Encoding.UTF8.GetBytes("modification éffectuées"); // Conversion en byte du body de l'endpoint
+                        context.Response.OutputStream.Write(bytesHtml, 0, bytesHtml.Length); // Affichage sur le server
+                        Console.WriteLine(rep.StatusCode.ToString());
+                    }
+                    catch (HttpRequestException e)
+                    {
+                        HandleException(e, response, context);
+                    }
+
                 }
                 else if(request.HttpMethod == "DELETE")
                 {
-                    await Api.DELETE(request.Url.LocalPath);
-
+                    try
+                    {
+                        HttpResponseMessage rep = await Api.DELETE(request.Url.LocalPath);
+                        byte[] bytesHtml = Encoding.UTF8.GetBytes("entrée supprimée"); // Conversion en byte du body de l'endpoint
+                        context.Response.OutputStream.Write(bytesHtml, 0, bytesHtml.Length); // Affichage sur le server
+                        Console.WriteLine(rep.StatusCode.ToString());
+                    }
+                    catch (HttpRequestException e)
+                    {
+                        HandleException(e, response, context);
+                    }
                 }
 
                 Console.WriteLine("REQUEST : " + context.Request.HttpMethod);
@@ -85,6 +98,27 @@ namespace GestionInventaireStock_CSharp.Server
 
 
 
+            }
+        }
+
+        public static void HandleException(HttpRequestException e, HttpListenerResponse response, HttpListenerContext context)
+        {
+            Console.WriteLine("Message : \n" + e.Message + "\n Status code : \n" + e.StatusCode + "\n request error : \n" + e.HttpRequestError.ToString());
+
+            byte[] errorBytes;
+
+            if (e.HttpRequestError.ToString() == "ConnectionError")
+            {
+                response.StatusCode = 500;
+                errorBytes = Encoding.UTF8.GetBytes("Erreur provenant du serveur"); // Conversion en byte du message d'erreur
+                context.Response.OutputStream.Write(errorBytes, 0, errorBytes.Length); // Affichage sur le server
+            }
+            else
+            {
+
+                response.StatusCode = 400;
+                errorBytes = Encoding.UTF8.GetBytes("Aucun endpoint correspondant"); // Conversion en byte du message d'erreur
+                context.Response.OutputStream.Write(errorBytes, 0, errorBytes.Length); // Affichage sur le server
             }
         }
     }
