@@ -1,6 +1,7 @@
 using System.Text;
 using System.Net;
 using GestionInventaireStock_CSharp.API;
+using System.Text.RegularExpressions;
 
 namespace GestionInventaireStock_CSharp.Server
 {
@@ -22,12 +23,37 @@ namespace GestionInventaireStock_CSharp.Server
             {
                 HttpListenerContext context = httpListener.GetContext(); // Obtention des informations sur la page (dites "context")
                 HttpListenerRequest request = context.Request;
+                HttpListenerResponse response = context.Response;
+
                 if (request.HttpMethod == "GET")
                 {
-                    Console.WriteLine(await Api.GET(request.Url.LocalPath));
+                    try
+                    {
+                        Console.WriteLine(await Api.GET(request.Url.LocalPath));
+                        byte[] bytesHtml = Encoding.UTF8.GetBytes(await Api.GET(request.Url.LocalPath)); // Conversion en byte du body de l'endpoint
+                        context.Response.OutputStream.Write(bytesHtml, 0, bytesHtml.Length); // Affichage sur le server
+                    }
+                    catch (HttpRequestException e)
+                    {
+                        Console.WriteLine("Message : \n" + e.Message + "\n Status code : \n" + e.StatusCode + "\n request error : \n" + e.HttpRequestError.ToString());
 
-                    byte[] bytesHtml = Encoding.UTF8.GetBytes(await Api.GET(request.Url.LocalPath)); // Conversion en byte
-                    context.Response.OutputStream.Write(bytesHtml, 0, bytesHtml.Length); // "Dépot" du fichier HTML sur le server
+                        byte[] errorBytes;
+
+                        if (e.HttpRequestError.ToString() == "ConnectionError")
+                        {
+                            response.StatusCode = 500;
+                            errorBytes = Encoding.UTF8.GetBytes("Erreur provenant du serveur"); // Conversion en byte du message d'erreur
+                            context.Response.OutputStream.Write(errorBytes, 0, errorBytes.Length); // Affichage sur le server
+                        }
+                        else
+                        {
+                            
+                            response.StatusCode = 400;
+                            errorBytes = Encoding.UTF8.GetBytes("Aucun endpoint correspondant"); // Conversion en byte du message d'erreur
+                            context.Response.OutputStream.Write(errorBytes, 0, errorBytes.Length); // Affichage sur le server
+                        }
+                    }
+
                 }
                 else if (request.HttpMethod == "POST") 
                 {
@@ -52,7 +78,7 @@ namespace GestionInventaireStock_CSharp.Server
                 }
 
                 Console.WriteLine("REQUEST : " + context.Request.HttpMethod);
-                Console.WriteLine("RESPONSE : " + context.Response.StatusCode);
+                Console.WriteLine("RESPONSE : " + response.StatusCode);
                 context.Response.Close(); // Fin de transmission
                 Console.WriteLine("DONE");
 
