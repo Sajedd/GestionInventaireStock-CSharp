@@ -13,6 +13,25 @@
     />
   </head>
   <body>
+  <?php
+    $db = new mysqli('192.168.45.20', 'remote', 'password', 'e-commerce');
+    if (!$db){
+      echo "ERROR";
+      die("Connection failed: " . $db->connect_error);
+    }
+    
+    $products = $db->query(
+      "SELECT * FROM products"
+    );
+    $json = [];
+
+    if ($products->num_rows > 0) {
+    // output data of each row
+      while ($row = $products->fetch_assoc()) {
+        array_push($json, $row["Name"]." : " . $row["Price"]." $");
+  }
+}
+  ?>
     <header>
       <h1>Application de Gestion d'Inventaire</h1>
     </header>
@@ -27,6 +46,10 @@
       <section>
         <h2>Liste des Articles</h2>
         <ul id="articleList"></ul>
+        <?php foreach ($json as &$p):?>
+          <h1><?php echo $p?></h1>
+          <br/>
+        <?php endforeach;?>
       </section>
     </main>
   </body>
