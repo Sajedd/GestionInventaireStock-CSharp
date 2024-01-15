@@ -5,6 +5,11 @@ namespace GestionInventaireStock_CSharp.API
     public class Api
     {
         public static HttpClient client = new HttpClient();
+
+        public Api() { 
+            client.Timeout = TimeSpan.FromSeconds(5);
+        }    
+
         
         // Create : méthode nous permettant d'enregistrer de nouvelles données
         public static async Task<HttpResponseMessage> POST(string endpoint, string json)
