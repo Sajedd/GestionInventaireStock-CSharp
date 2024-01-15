@@ -1,8 +1,6 @@
 using System.Text;
 using System.Net;
 using GestionInventaireStock_CSharp.API;
-using System.Text.RegularExpressions;
-using System;
 
 namespace GestionInventaireStock_CSharp.Server
 {
@@ -15,7 +13,7 @@ namespace GestionInventaireStock_CSharp.Server
             // Lancement du serveur
             string API_URL = "http://localhost:3000/";
             Console.WriteLine("Starting server...");
-            httpListener.Prefixes.Add(API_URL); // Ajout de l'URI du serveur local
+            httpListener.Prefixes.Add("http://localhost:3000/"); // Ajout de l'URI du serveur local
             httpListener.Start();
             Console.WriteLine("Running at "+API_URL);
 
