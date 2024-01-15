@@ -75,4 +75,5 @@ Documentations officielles :
 Installation simplifiée : https://kifarunix.com/
 Résolution de problème : https://stackoverflow.com/
 Ip Static pour les vm :https://itslinuxfoss.com/set-up-static-ip-address-debian-12-linux/#1
+Documentation de l'API avec Swagger : https://swagger.io/
 
