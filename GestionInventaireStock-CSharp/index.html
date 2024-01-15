@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="fr">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Gestion d'Inventaire</title>
+    <link rel="stylesheet" href="/GestionInventaireStock-CSharp/styles.css" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css"
+      integrity="sha512-RL01Hzao3Tu82v4S1fhG/PQuE0qe/3M5Mj2lzauTaCqZPr3zj5tiQ11CP0NMmIp5gLkfo4TchvB9GezIYCMZ2Q=="
+      crossorigin="anonymous"
+    />
+  </head>
+  <body>
+    <header>
+      <h1>Application de Gestion d'Inventaire</h1>
+    </header>
+    <main>
+      <form id="articleForm">
+        <label for="articleName">Nom de l'article:</label>
+        <input type="text" id="articleName" name="articleName" required />
+        <button onclick="createArticle()">
+          <i class="fa-solid fa-plus"></i> Ajouter Article
+        </button>
+      </form>
+      <section>
+        <h2>Liste des Articles</h2>
+        <ul id="articleList"></ul>
+      </section>
+    </main>
+  </body>
+</html>
