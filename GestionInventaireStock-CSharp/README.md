@@ -1,4 +1,4 @@
-# Projet Gestion d'Inventaire et de Stock en C#
+# Projet Gestion d'Inventaire et de Stock en C# 🚀
 
 ## Description 📝
 
