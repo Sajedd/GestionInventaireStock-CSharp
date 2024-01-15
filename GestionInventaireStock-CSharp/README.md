@@ -35,7 +35,7 @@ Bienvenue dans notre projet de groupe en C# de gestion d'inventaire et de stock.
 ## Rendu 🚀
 
 Le projet est déposé sur [[lien vers notre dépôt GitHub]](https://github.com/Sajedd/GestionInventaireStock-CSharp).
-- [Documentation de l'API (PDF)] etc... !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+- [Documentation de l'API (PDF) voir dans le repo du projet]
 
 ## Captures d'Écran 📷
 
