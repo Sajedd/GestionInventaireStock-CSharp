@@ -57,6 +57,19 @@
 
         }
 
+        async function delArticle() {
+            try {
+                const response = await fetch("http://localhost:3000/products/" + document.getElementById("delArticleId").value, {
+                    method: "DELETE",
+                });
+                txt = response.text()
+                console.log(txt)
+            } catch (error) {
+                console.error(error)
+            }
+
+        }
+
         function test() {
             console.log("test")
             console.log(document.getElementById("articleName").value)
@@ -138,17 +151,24 @@
                 <button onclick="putArticle();">
                     <i class="fa-solid fa-plus"></i> Modifier Article
                 </button>
-                <section>
-                    <h2>Liste des Articles</h2>
-                    <ul id="articleList"></ul>
-                    <?php foreach ($json as &$p): ?>
-                        <h1>
-                            <?php echo $p; ?>
-                        </h1>
-                        <br />
-                    <?php endforeach; ?>
 
-                </section>
+                <lspan>DELETE:</span>
+                    <label for="delArticleId">Id de l'article:</label>
+                    <input type="number" id="delArticleId" name="putArticleId" required />
+                    <button onclick="delArticle();">
+                        <i class="fa-solid fa-plus"></i> Supprimer Article
+                    </button>
+                    <section>
+                        <h2>Liste des Articles</h2>
+                        <ul id="articleList"></ul>
+                        <?php foreach ($json as &$p): ?>
+                            <h1>
+                                <?php echo $p; ?>
+                            </h1>
+                            <br />
+                        <?php endforeach; ?>
+
+                    </section>
 
     </main>
 </body>
