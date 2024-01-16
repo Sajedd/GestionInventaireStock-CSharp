@@ -64,6 +64,10 @@ Si vous souhaitez contribuer à notre projet, suivez ces étapes :
 lins vers notre Conduite de projet : https://trello.com/invite/b/G88gTNXR/ATTI4e11a87205146ce8f8d984ce0c4fafe45E45147F/conduite-de-projet-gestion-inventaire-stock-c
 ![image](https://github.com/Sajedd/GestionInventaireStock-CSharp/assets/112949717/67ad17c8-2483-4885-8a84-82333f405b08)
 
+## Figma 🎨
+![Capture d'écran 2024-01-15 163802](https://github.com/Sajedd/GestionInventaireStock-CSharp/assets/112949717/61b9c74e-9b0e-43cd-ad32-24bdbb15b1f2)
+
+
 ## Remerciements 🙏
 
 Nous remercions toutes les ressources tierces, bibliothèques, et la communauté qui nous ont soutenus pendant ce projet.
