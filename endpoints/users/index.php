@@ -1,6 +1,6 @@
 <?php
 $db = new mysqli('192.168.45.20', 'remote', 'password', 'e-commerce');
-if (!$db){
+if (!$db) {
   echo "ERROR";
   die("Connection failed: " . $db->connect_error);
 }
@@ -10,6 +10,7 @@ if (!$db){
 $users = $db->query(
   "SELECT * FROM users"
 );
+$db->close();
 $json = [];
 
 if ($users->num_rows > 0) {
@@ -24,44 +25,59 @@ if ($users->num_rows > 0) {
     array_push($json, $row);
   }
 }
-if ($_SERVER['REQUEST_METHOD'] == "GET") {
-  echo json_encode($json);
-} else if ($_SERVER['REQUEST_METHOD'] == "POST") {
-  $log = fopen("log.txt", "w");
-  $_POST = json_decode(file_get_contents("php://input"), true);
-  $db->query(
-    "INSERT INTO users (LastName, FirstName, Email,Passwd) VALUES ('" . $_POST["LastName"] . "', '" . $_POST["FirstName"] . "', '" . $_POST["Email"] . "','" . password_hash($_POST["Passwd"], PASSWORD_DEFAULT) . "');"
-  );
-  if ($db->connect_error) {
-    die("Connection failed: " . $db->connect_error);
-  }
-  $db->close();
-} else if ($_SERVER['REQUEST_METHOD'] == "PUT") {
-  /* PUT data comes in on the stdin stream */
-  $putdata = fopen("php://input", "r");
+$method = $_SERVER['REQUEST_METHOD'];
+switch ($method) {
+  case 'PUT':
+    $db->connect('192.168.45.20', 'remote', 'password', 'e-commerce');
+    /* PUT data comes in on the stdin stream */
+    $putdata = fopen("php://input", "r");
 
-  /* Open a file for writing */
-  $fp = fopen("myputfile.txt", "w");
+    /* Open a file for writing */
+    $fp = fopen("myputfile.txt", "w");
 
-  /* Read the data 1 KB at a time
-     and write to the file */
-  while ($data = fread($putdata, 1024))
-    fwrite($fp, $data);
+    /* Read the data 1 KB at a time
+       and write to the file */
+    while ($data = fread($putdata, 1024))
+      fwrite($fp, $data);
 
-  fclose($putdata);
-  $test = fopen("test.txt", "w");
-  $PUT = json_decode(file_get_contents("myputfile.txt"), true);
-
-  $err = $db->query(
-    "UPDATE users SET LastName='" . $PUT["LastName"] . "', FirstName='" . $PUT["FirstName"] . "', Email='" . $PUT["Email"] . "',Passwd='" . password_hash($PUT["Passwd"], PASSWORD_DEFAULT) . "' WHERE UserId=" . $PUT["UserId"] . ";"
-  );
-  fwrite($test, "UPDATE users SET LastName='" . $PUT["LastName"] . "', FirstName='" . $PUT["FirstName"] . "', Email='" . $PUT["Email"] . "',Passwd='" . password_hash($PUT["Passwd"], PASSWORD_DEFAULT) . "' WHERE UserId=" . $PUT["UserId"] . ";");
-  if ($db->connect_error | !$err | $db->error) {
-    echo "ERROR";
-    die("Connection failed: " . $db->connect_error);
-  }
-  fclose($test);
-
-  $db->close();
+    fclose($putdata);
+    $test = fopen("test.txt", "w");
+    $PUT = json_decode(file_get_contents("myputfile.txt"), true);
+    try {
+      $db->query(
+        "UPDATE users SET LastName='" . $PUT["LastName"] . "', FirstName='" . $PUT["FirstName"] . "', Email='" . $PUT["Email"] . "',Passwd='" . password_hash($PUT["Passwd"], PASSWORD_DEFAULT) . "' WHERE UserId=" . $PUT["UserId"]
+      );
+    } catch (Exception $e) {
+      echo $e;
+    }
+    if ($db->connect_error) {
+      echo ("Connection failed: " . $db->connect_error);
+    }
+    $db->close();
+    break;
+  case 'POST':
+    $db->connect('192.168.45.20', 'remote', 'password', 'e-commerce');
+    echo "start";
+    $log = fopen("log.txt", "w") or die("Unable to open file!");
+    echo "opened";
+    fwrite($log, "izhafizehfie");
+    echo $_POST["Name"];
+    try {
+      $db->query(
+        "INSERT INTO users (LastName, FirstName, Email,Passwd) VALUES ('" . $_POST["LastName"] . "', '" . $_POST["FirstName"] . "', '" . $_POST["Email"] . "','" . password_hash($_POST["Passwd"], PASSWORD_DEFAULT) . "');"
+      );
+    } catch (Exception $e) {
+      echo $e;
+    }
+    if ($db->connect_error) {
+      die("Connection failed: " . $db->connect_error);
+    }
+    $db->close();
+    break;
+  case 'GET':
+    echo json_encode($json);
+  default:
+    echo ($method + "not supported");
+    break;
 }
 ?>

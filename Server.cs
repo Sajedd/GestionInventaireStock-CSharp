@@ -46,7 +46,7 @@ namespace GestionInventaireStock_CSharp.Server
                     try
                     {
                         HttpResponseMessage rep = await Api.POST(request.Url.LocalPath, body);
-                        byte[] bytesHtml = Encoding.UTF8.GetBytes("enregistrement réussi"); // Conversion en byte du body de l'endpoint
+                        byte[] bytesHtml = Encoding.UTF8.GetBytes("enregistrement réussi"+rep.Content.ReadAsStringAsync().Result); // Conversion en byte du body de l'endpoint
                         context.Response.OutputStream.Write(bytesHtml, 0, bytesHtml.Length); // Affichage sur le server
                         Console.WriteLine(rep.StatusCode.ToString());
                     }
@@ -63,7 +63,7 @@ namespace GestionInventaireStock_CSharp.Server
                     try
                     {
                         HttpResponseMessage rep = await Api.PUT(request.Url.LocalPath, body);
-                        byte[] bytesHtml = Encoding.UTF8.GetBytes("modification éffectuées"); // Conversion en byte du body de l'endpoint
+                        byte[] bytesHtml = Encoding.UTF8.GetBytes("modification éffectuées" + rep.Content.ReadAsStringAsync().Result); // Conversion en byte du body de l'endpoint
                         context.Response.OutputStream.Write(bytesHtml, 0, bytesHtml.Length); // Affichage sur le server
                         Console.WriteLine(rep.StatusCode.ToString());
                     }
@@ -101,7 +101,7 @@ namespace GestionInventaireStock_CSharp.Server
 
         public static void HandleException(HttpRequestException e, HttpListenerResponse response, HttpListenerContext context)
         {
-            Console.WriteLine("Message : \n" + e.Message + "\n Status code : \n" + e.StatusCode + "\n request error : \n" + e.HttpRequestError.ToString());
+            Console.WriteLine("Message : \n" + e.Message + "\n Status code : \n" + e.StatusCode + "\n request error : \n" + e.HttpRequestError.ToString() + "\n"+e.Data.Values);
 
             byte[] errorBytes;
 

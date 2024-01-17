@@ -45,7 +45,8 @@ switch ($method) {
         $PUT = json_decode(file_get_contents("myputfile.txt"), true);
         try {
             $db->query(
-                "UPDATE products SET Name='" . $PUT["Name"] . "', Price=" . $PUT["Price"] . ", Vendor='" . $PUT["Vendor"] . "', Quantity= " . $PUT["Quantity"] . " WHERE productId=" . $PUT["ProductId"]);
+                "UPDATE products SET Name='" . $PUT["Name"] . "', Price=" . $PUT["Price"] . ", Vendor='" . $PUT["Vendor"] . "', Quantity= " . $PUT["Quantity"] . " WHERE productId=" . $PUT["ProductId"]
+            );
         } catch (Exception $e) {
             echo $e;
         }
@@ -55,14 +56,20 @@ switch ($method) {
         $db->close();
         break;
     case 'POST':
+        $db->connect('192.168.45.20', 'remote', 'password', 'e-commerce');
         echo "start";
         $log = fopen("log.txt", "w") or die("Unable to open file!");
         echo "opened";
         fwrite($log, "izhafizehfie");
         echo $_POST["Name"];
-        $db->query(
-            "INSERT INTO products (Name, Price, Vendor, Quantity) VALUES ('" . $_POST["Name"] . "', '" . $_POST["Price"] . "', '" . $_POST["Vendor"] . "', '" . $_POST["Quantity"] . "');"
-        );
+        try {
+            $db->query(
+                "INSERT INTO products (Name, Price, Vendor, Quantity) VALUES ('" . $_POST["Name"] . "', '" . $_POST["Price"] . "', '" . $_POST["Vendor"] . "', '" . $_POST["Quantity"] . "');"
+            );
+        } catch (Exception $e) {
+            echo $e;
+        }
+
         if ($db->connect_error) {
             die("Connection failed: " . $db->connect_error);
         }
@@ -72,7 +79,7 @@ switch ($method) {
         echo json_encode($json);
         break;
     default:
-        echo ($method);
+        echo ($method + "not supported");
         break;
 }
 
